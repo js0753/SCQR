@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scqr/httpService.dart';
+import 'package:scqr/users/scanners.dart';
 import 'scannedData.dart';
 
 class QRViewExample extends StatefulWidget {
@@ -40,18 +41,25 @@ class _QRViewExampleState extends State<QRViewExample> {
   void pauseCam(String data, String userId) async {
     await controller!.pauseCamera();
     // addQrScan(dataList);
+    String response = '';
     if (userType == "Manufacturer")
-      HttpService.FunctionInvoke('manufactureProcessing', [data, userId]);
+      response = await HttpService.FunctionInvoke(
+          'manufactureProcessing', [data, userId]);
     else if (userType == "Wholesaler")
-      HttpService.FunctionInvoke('wholesalerDistribute', [data, userId]);
+      response = await HttpService.FunctionInvoke(
+          'wholesalerDistribute', [data, userId]);
     else if (userType == "Shipping")
-      HttpService.FunctionInvoke('initiateShipment', [data, userId]);
+      response =
+          await HttpService.FunctionInvoke('initiateShipment', [data, userId]);
     else if (userType == "Retailer")
-      HttpService.FunctionInvoke('deliverToRetail', [data, userId]);
+      response =
+          await HttpService.FunctionInvoke('deliverToRetail', [data, userId]);
     else if (userType == "Vendor")
-      HttpService.FunctionInvoke('completeOrder', [data, userId]);
+      response =
+          await HttpService.FunctionInvoke('completeOrder', [data, userId]);
     else
-      HttpService.FunctionInvoke('query', [data]);
+      response = await HttpService.FunctionInvoke('query', [data]);
+    Navigator.pop(context, response);
   }
 
   @override

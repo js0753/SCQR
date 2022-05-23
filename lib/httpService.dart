@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class HttpService {
-  static Future<void> FunctionInvoke(String func, List args) async {
+  static Future<String> FunctionInvoke(String func, List args) async {
     var token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTMzMjc1ODYsInVzZXJuYW1lIjoiZXJlbiIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNjUzMjkxNTg2fQ.fXA6bO24lZevFh9BROXV3b3UO-onLt9bjLAEvXN1afg";
     var ApiLink = "https://7af02e298a4be2.lhrtunnel.link";
@@ -26,8 +26,9 @@ class HttpService {
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body);
         print(body.toString());
+        return body.toString();
       } else {
-        throw res.body;
+        return "Error";
       }
     } else {
       String url = ApiLink + chaincode;
@@ -49,8 +50,9 @@ class HttpService {
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body);
         print(body.toString());
+        return body.toString();
       } else {
-        throw "Error in getting response";
+        return "Error";
       }
     }
   }

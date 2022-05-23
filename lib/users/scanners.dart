@@ -4,7 +4,8 @@ import '../qr_scanner.dart';
 class ScannersPage extends StatelessWidget {
   final String userType;
   final String userId;
-  const ScannersPage(this.userType, this.userId);
+  String response = '';
+  ScannersPage(this.userType, this.userId);
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +18,15 @@ class ScannersPage extends StatelessWidget {
           children: [
             HomeButton(
                 text: "Scan QR Code",
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                onTap: () async {
+                  response = await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         QRViewExample(this.userType, this.userId),
                   ));
                 }),
+            Container(
+              child: Text(response),
+            )
           ],
         ),
       ),
