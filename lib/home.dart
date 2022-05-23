@@ -114,27 +114,53 @@ class LoginFormState extends State<LoginForm> {
                       .signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passController.text);
-                  await getUserType(emailController.text);
-                  if (_currentSelectedValue == 'APMCCollector') {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const APMCCollectorPage(),
-                    ));
-                  } else if (_currentSelectedValue == 'Admin') {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AdminPage(),
-                    ));
+                  var userType = await getUserType(emailController.text);
+                  if (userType == _currentSelectedValue) {
+                    if (_currentSelectedValue == 'APMCCollector') {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const APMCCollectorPage(),
+                      ));
+                    } else if (_currentSelectedValue == 'Admin') {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AdminPage(),
+                      ));
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ScannersPage(
+                            _currentSelectedValue, emailController.text),
+                      ));
+                    }
                   } else {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ScannersPage(
-                          _currentSelectedValue, emailController.text),
-                    ));
+                    //alert box
+                    throw FirebaseAuthException(code: 'invalid user type');
                   }
                 } on FirebaseAuthException catch (e) {
+                  String errorMsg = 'Bad Login';
                   if (e.code == 'user-not-found') {
                     print('No user found for that email.');
+                    errorMsg = 'No user found for that email.';
                   } else if (e.code == 'wrong-password') {
                     print('Wrong password provided for that user.');
+                    errorMsg = 'Wrong password provided for that user.';
+                  } else if (e.code == 'invalid user type') {
+                    print('Please select the correct user type');
+                    errorMsg = 'Please select the correct user type.';
                   }
+                  print("Invalid Login");
+                  return showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            title: Text("Invalid Login Attempt"),
+                            content: Text(errorMsg),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Text("okay"),
+                              ),
+                            ],
+                          ));
                 }
               }, //validateForm,
             ),

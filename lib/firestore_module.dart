@@ -9,17 +9,23 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 //     CollectionReference qrDB = FirebaseFirestore.instance.collection('qrDB');
 CollectionReference usersDB = FirebaseFirestore.instance.collection('users');
 Future<String> getUserType(String userId) async {
-  var users = await usersDB.get().then(
-        (res) => () {
-          print("Successfully completed: asd");
-          for (var x in res.docs) {
-            print(x);
-          }
-        },
-        onError: (e) => print("Error completing: $e"),
-      );
-
-  return '';
+  var userList = await usersDB.get().then(
+    (res) {
+      print("Successfully completed: ");
+      // res.docs.forEach((element) async {
+      //   print(element.id);
+      // });
+      List<dynamic> result = res.docs.map((doc) => doc.data()).toList();
+      return result;
+    },
+    onError: (e) => print("Error completing: $e"),
+  );
+  print(userList[0].toString());
+  for (var usr in userList) {
+    // print(usr['userType']);
+    if (usr['email'] == userId) return usr['userType'];
+  }
+  return 'User does not exist';
 }
 
 // Future<String> addUser(fullName, phoneNo, addr, city, state, pin) {}
