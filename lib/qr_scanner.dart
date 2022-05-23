@@ -4,17 +4,23 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'firestore_module.dart';
+import 'package:scqr/httpService.dart';
 import 'scannedData.dart';
 
 class QRViewExample extends StatefulWidget {
-  const QRViewExample({Key? key}) : super(key: key);
+  final String userType;
+  final String userId;
+  const QRViewExample(this.userType, this.userId);
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() =>
+      _QRViewExampleState(this.userType, this.userId);
 }
 
 class _QRViewExampleState extends State<QRViewExample> {
+  final String userType;
+  final String userId;
+  _QRViewExampleState(this.userType, this.userId);
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
@@ -31,33 +37,41 @@ class _QRViewExampleState extends State<QRViewExample> {
     }
   }
 
-  void pauseCam(dataList) async{
+  void pauseCam(String data, String userId) async {
     await controller!.pauseCamera();
-    addQrScan(dataList);
-    
+    // addQrScan(dataList);
+    if (userType == "Manufacturer")
+      HttpService.FunctionInvoke('manufactureProcessing', [data, userId]);
+    else if (userType == "Wholesaler")
+      HttpService.FunctionInvoke('wholesalerDistribute', [data, userId]);
+    else if (userType == "Shipping")
+      HttpService.FunctionInvoke('initiateShipment', [data, userId]);
+    else if (userType == "Retailer")
+      HttpService.FunctionInvoke('deliverToRetail', [data, userId]);
+    else if (userType == "Vendor")
+      HttpService.FunctionInvoke('completeOrder', [data, userId]);
+    else
+      HttpService.FunctionInvoke('query', [data]);
   }
+
   @override
   Widget build(BuildContext context) {
-    if (result!=null){
-      List dataList=(result!.code)!.split(';');
-      pauseCam(dataList);
-      return ScannedData(dataList); 
-      
-              
+    if (result != null) {
+      pauseCam(result!.code ?? '', this.userId);
+      // return ScannedData(dataList);
     }
     return Scaffold(
       body: Column(
         children: <Widget>[
           Expanded(
             flex: 5,
-            child:_buildQrView(context),
+            child: _buildQrView(context),
           ),
           Expanded(
             flex: 1,
             child: Center(
               child: (result != null)
-                  ? 
-                  Text(
+                  ? Text(
                       'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   : Text('Scan a code'),
             ),
@@ -67,19 +81,21 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-
-  Widget _buildQrView(BuildContext context){
-var scanArea= (MediaQuery.of(context).size.width<400||MediaQuery.of(context).size.width<400)?150.0:300.0;
-return QRView(
-  key:qrKey,
-  onQRViewCreated: _onQRViewCreated,
-  overlay: QrScannerOverlayShape(
-    borderColor: Colors.red,
-    borderRadius: 10,
-    borderLength: 50,
-    borderWidth: 10,
-    cutOutSize: scanArea),
-  );
+  Widget _buildQrView(BuildContext context) {
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.width < 400)
+        ? 150.0
+        : 300.0;
+    return QRView(
+      key: qrKey,
+      onQRViewCreated: _onQRViewCreated,
+      overlay: QrScannerOverlayShape(
+          borderColor: Colors.red,
+          borderRadius: 10,
+          borderLength: 50,
+          borderWidth: 10,
+          cutOutSize: scanArea),
+    );
   }
 
   void _onQRViewCreated(QRViewController controller) {
@@ -87,7 +103,6 @@ return QRView(
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-
       });
     });
   }

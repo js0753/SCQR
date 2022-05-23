@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scqr/users/scanners.dart';
 import 'users/apmcCollector.dart';
 
 class HomePage extends StatelessWidget {
@@ -73,7 +74,8 @@ class LoginFormState extends State<LoginForm> {
               'Manufacturer',
               'Wholesaler',
               'Retailer',
-              'Shipping'
+              'Shipping',
+              'Vendor'
             ]
                 .map((label) => DropdownMenuItem(
                       child: Text(label),
@@ -134,6 +136,11 @@ class LoginFormState extends State<LoginForm> {
                   if (_currentSelectedValue == 'APMCCollector') {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const APMCCollectorPage(),
+                    ));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ScannersPage(
+                          _currentSelectedValue, emailController.text),
                     ));
                   }
                 } on FirebaseAuthException catch (e) {
