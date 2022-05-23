@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +31,35 @@ Future<String> getUserType(String userId) async {
   return 'User does not exist';
 }
 
-// Future<String> addUser(fullName, phoneNo, addr, city, state, pin) {}
+Future<String> addUser(emailId, pass, userType) async {
+  var msg = '';
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: emailId, password: pass);
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+      msg = 'The password provided is too weak.';
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+      msg = 'The password provided is too weak.';
+    }
+  } catch (e) {
+    print(e);
+    msg = e.toString();
+  } finally {
+    if (msg != '') return msg;
+  }
+
+  final data = {"email": emailId, "userType": userType};
+
+  msg = await usersDB.add(data).then((documentSnapshot) {
+    return "Added Data with ID: ${documentSnapshot.id}";
+  }, onError: (e) {
+    return "Error completing: $e";
+  });
+  return msg;
+}
 // Future<String> addFarmer(fullName, phoneNo, addr, city, state, pin) async {
 //   // Call the user's CollectionReference to add a new user
 //   var counter =

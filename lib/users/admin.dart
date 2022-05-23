@@ -109,6 +109,23 @@ class RegisterFormState extends State<RegisterForm> {
               elevation: 4,
               onPressed: () async {
                 //create user
+                var message = await addUser(emailController.text,
+                    passController.text, _currentSelectedValue);
+                // print(message[0]);
+                return showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                          title: Text("Message"),
+                          content: Text(message),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop();
+                              },
+                              child: Text("okay"),
+                            ),
+                          ],
+                        ));
               }, //validateForm,
             ),
           ),
