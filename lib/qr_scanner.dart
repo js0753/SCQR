@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scqr/httpService.dart';
 import 'package:scqr/users/scanners.dart';
-import 'scannedData.dart';
 
 class QRViewExample extends StatefulWidget {
   final String userType;
@@ -38,7 +37,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     }
   }
 
-  void pauseCam(String data, String userId) async {
+  void pauseCam(String data, String userId, BuildContext context) async {
     await controller!.pauseCamera();
     // addQrScan(dataList);
     String response = '';
@@ -65,7 +64,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   @override
   Widget build(BuildContext context) {
     if (result != null) {
-      pauseCam(result!.code ?? '', this.userId);
+      pauseCam(result!.code ?? '', this.userId, context);
       // return ScannedData(dataList);
     }
     return Scaffold(

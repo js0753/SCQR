@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scqr/firestore_module.dart';
+import 'package:scqr/users/admin.dart';
 import 'package:scqr/users/scanners.dart';
 import 'users/apmcCollector.dart';
 
@@ -11,27 +13,6 @@ class HomePage extends StatelessWidget {
     return Container(
         width: double.infinity,
         child: Container(margin: EdgeInsets.all(30), child: LoginForm()));
-  }
-}
-
-class HomeButton extends StatelessWidget {
-  String text;
-  var onTap;
-  HomeButton({required this.text, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(25),
-      color: Colors.black,
-      child: InkWell(
-        child: Text(
-          text,
-          style: TextStyle(color: Colors.white),
-        ),
-        onTap: this.onTap,
-      ),
-    );
   }
 }
 
@@ -133,9 +114,14 @@ class LoginFormState extends State<LoginForm> {
                       .signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passController.text);
+                  await getUserType(emailController.text);
                   if (_currentSelectedValue == 'APMCCollector') {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const APMCCollectorPage(),
+                    ));
+                  } else if (_currentSelectedValue == 'Admin') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AdminPage(),
                     ));
                   } else {
                     Navigator.of(context).push(MaterialPageRoute(

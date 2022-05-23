@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import '../qr_scanner.dart';
 
-class ScannersPage extends StatelessWidget {
+class ScannersPage extends StatefulWidget {
   final String userType;
   final String userId;
   String response = '';
   ScannersPage(this.userType, this.userId);
 
+  @override
+  State<StatefulWidget> createState() =>
+      _ScannersPageState(this.userType, this.userId);
+}
+
+class _ScannersPageState extends State<ScannersPage> {
+  final String userType;
+  final String userId;
+  String response = '';
+  _ScannersPageState(this.userType, this.userId);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +33,7 @@ class ScannersPage extends StatelessWidget {
                     builder: (context) =>
                         QRViewExample(this.userType, this.userId),
                   ));
+                  setState(() {});
                 }),
             Container(
               child: Text(response),
