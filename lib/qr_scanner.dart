@@ -76,11 +76,24 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
           Expanded(
             flex: 1,
-            child: Center(
-              child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Scan a code'),
+            child: Container(
+              color: Color.fromARGB(255, 15, 4, 89),
+              child: Center(
+                child: (result != null)
+                    ? Text(
+                        'Barcode Type: ${describeEnum(result!.format)} Data: ${result!.code}',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                          fontFamily: "roboto",
+                        ))
+                    : Text('Please Scan A QR Code',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          color: Colors.white,
+                          fontFamily: "roboto",
+                        )),
+              ),
             ),
           )
         ],

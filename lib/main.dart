@@ -24,7 +24,7 @@ class _AppState extends State<App> {
       setState(() {
         _initialized = true;
       });
-    } catch(e) {
+    } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
       setState(() {
         _error = true;
@@ -36,20 +36,89 @@ class _AppState extends State<App> {
   void initState() {
     initializeFlutterFire();
     super.initState();
+    _loadingInProgress = true;
+    _loadData();
+  }
+
+  bool _loadingInProgress = true;
+
+  Future _loadData() async {
+    await new Future.delayed(new Duration(seconds: 3));
+    _dataLoaded();
+  }
+
+  void _dataLoaded() {
+    setState(() {
+      _loadingInProgress = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // Show error message if initialization failed
-    if(_error) {
-      return MaterialApp(home:Scaffold(body:Container(child: Text("Something Went Wrong"),)));
+    if (_error) {
+      return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+              backgroundColor: Color.fromARGB(255, 15, 4, 89),
+              body: Container(
+                child: Text("Something Went Wrong"),
+              )));
     }
 
     // Show a loader until FlutterFire is initialized
-    if (!_initialized) {
-      return MaterialApp(home:Scaffold(body:Container(child: Text("Loading"),)));
+    if (!_initialized || _loadingInProgress) {
+      return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              secondary: Colors.limeAccent[300],
+            ),
+            textTheme:
+                const TextTheme(bodyText2: TextStyle(color: Colors.white)),
+          ),
+          home: Scaffold(
+              backgroundColor: Color.fromARGB(255, 15, 4, 89),
+              body: IntroPage()));
     }
 
-    return MaterialApp(home:Scaffold(body:HomePage()));
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+            backgroundColor: Color.fromARGB(255, 15, 4, 89), body: HomePage()));
+  }
+}
+
+class IntroPage extends StatefulWidget {
+  @override
+  MyIntroState createState() => MyIntroState();
+}
+
+class MyIntroState extends State {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: 200,
+          width: 200,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              image: DecorationImage(
+                  image: AssetImage('assets/finalLogo.PNG'), fit: BoxFit.fill)),
+        ),
+        SizedBox(
+          height: 50.0,
+        ),
+        Text("Trace Fruit",
+            style: TextStyle(
+              fontSize: 30.0,
+              color: Colors.white,
+              fontFamily: "roboto",
+            )),
+      ],
+    ));
   }
 }

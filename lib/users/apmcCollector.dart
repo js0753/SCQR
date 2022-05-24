@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import '../httpService.dart';
 
 class APMCCollectorPage extends StatefulWidget {
@@ -20,18 +23,29 @@ class _APMCCollectorPageState extends State<APMCCollectorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(190, 15, 4, 89),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(top: 40, left: 25, right: 25),
-        child: Column(children: [
-          DataForm(
-            changeState: () {
-              setState(() {
-                print("Set State called");
-              });
-            },
-          ),
-          qrcImage,
-        ]),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 10),
+          child: Column(children: [
+            DataForm(
+              changeState: () {
+                setState(() {
+                  print("Set State called");
+                });
+              },
+            ),
+            Container(
+              child: qrcImage,
+              color: Colors.white,
+              padding: EdgeInsets.all(10.0),
+            ),
+            SizedBox(
+              height: 100,
+            )
+          ]),
+        ),
       ),
     );
   }
@@ -51,6 +65,7 @@ Future<Uint8List> GetQRImage(String dataString) async {
       version: QrVersions.auto,
       gapless: false,
     ).toImage(300);
+
     final a = await image.toByteData(format: ImageByteFormat.png);
     return a!.buffer.asUint8List();
   } catch (e) {
@@ -92,73 +107,100 @@ class DataFormState extends State<DataForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          // Add TextFormFields and ElevatedButton here.
+          SizedBox(
+            height: 50,
+          ),
+          Text("New Produce Entry",
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.white,
+                fontFamily: "roboto",
+              )),
+          SizedBox(
+            height: 50,
+          ),
           TextFormField(
             controller: idController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              hintText: 'Farmer ID',
-              hintStyle: TextStyle(color: Colors.grey),
+              labelText: "Farmer ID ",
+              focusColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white, fontSize: 15.0),
+              hintStyle: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.white),
               ),
             ),
           ),
           TextFormField(
             controller: prodController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              hintText: 'Product',
-              hintStyle: TextStyle(color: Colors.grey),
+              labelText: "Product ",
+              focusColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white, fontSize: 15.0),
+              hintStyle: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.white),
               ),
             ),
           ),
           TextFormField(
             controller: costController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              hintText: 'Cost Per Item',
-              hintStyle: TextStyle(color: Colors.grey),
+              labelText: "Cost per Item",
+              focusColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white, fontSize: 15.0),
+              hintStyle: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.white),
               ),
             ),
           ),
           TextFormField(
             controller: itnoController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              hintText: 'No of Items per box',
-              hintStyle: TextStyle(color: Colors.grey),
+              labelText: "Quantity",
+              focusColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white, fontSize: 15.0),
+              hintStyle: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.white),
               ),
             ),
           ),
           TextFormField(
             controller: gradeController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              hintText: 'Grade',
-              hintStyle: TextStyle(color: Colors.grey),
+              labelText: "Grade",
+              focusColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white, fontSize: 15.0),
+              hintStyle: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.white),
               ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 87, right: 55, bottom: 63, left: 38),
-            width: 282,
-            height: 40,
+            width: 300,
+            height: 50,
             decoration: BoxDecoration(
-              color: Colors.purple,
+              color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: MaterialButton(
               child: Text(
                 'Generate Code',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 20, color: Color.fromARGB(190, 15, 4, 89)),
               ),
               elevation: 4,
               onPressed: () async {
-                //add loading overlay
+                //Get Location first
                 // Position _currentPosition = await _determinePosition();
                 print("Got location");
                 var dataString = idController.text +
@@ -169,13 +211,30 @@ class DataFormState extends State<DataForm> {
                     // _currentPosition.latitude.toString() +
                     // _currentPosition.longitude.toString() +
                     DateTime.now().toString();
+
+                // Append all fields together along with date and location _____
                 var bytes = utf8.encode(dataString);
                 var digest = sha256.convert(bytes).toString();
                 print(digest);
+
+                // Generate QR Code _____________________________
                 var qri = await GetQRImage(digest);
                 Image qrcImage = Image.memory(qri);
                 _APMCCollectorPageState.qrcImage = qrcImage;
                 // uploadFile(qri);
+
+                // Saved Image to Gallery ____________________
+                final snackBar = SnackBar(
+                  backgroundColor: Colors.white,
+                  content: const Text(
+                    'Saved code to gallery!',
+                    style: TextStyle(color: Color.fromARGB(255, 15, 4, 89)),
+                  ),
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                // Send transaction request to API
                 HttpService.FunctionInvoke('createRawFood', [
                   digest,
                   idController.text,

@@ -9,6 +9,7 @@ class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 15, 4, 89),
       body: Container(
           width: double.infinity,
           child: Container(margin: EdgeInsets.all(30), child: RegisterForm())),
@@ -37,99 +38,143 @@ class RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passController = new TextEditingController();
-  String _currentSelectedValue = 'Guest';
+  String _currentSelectedValue = 'Admin';
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          // Add TextFormFields and ElevatedButton here.
-          DropdownButtonFormField<String>(
-            value: _currentSelectedValue,
-            items: [
-              'Admin',
-              "Guest",
-              'APMCCollector',
-              'Manufacturer',
-              'Wholesaler',
-              'Shipping',
-              'Retailer',
-              'Vendor'
-            ]
-                .map((label) => DropdownMenuItem(
-                      child: Text(label),
-                      value: label,
-                    ))
-                .toList(),
-            hint: Text('User Type'),
-            onChanged: (value) {
-              setState(() {
-                _currentSelectedValue = value ?? '';
-              });
-            },
-            onSaved: (val) {
-              print('onSaved drowndownformfield $val');
-            },
-          ),
-          TextFormField(
-            controller: emailController,
-            decoration: InputDecoration(
-              hintText: 'EmailId',
-              hintStyle: TextStyle(color: Colors.grey),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 10),
+          child: Column(
+            children: <Widget>[
+              // Add TextFormFields and ElevatedButton here.
+              SizedBox(
+                height: 50,
               ),
-            ),
-          ),
-          TextFormField(
-            controller: passController,
-            decoration: InputDecoration(
-              hintText: 'password',
-              hintStyle: TextStyle(color: Colors.grey),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+              Text("Administration ",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    color: Colors.white,
+                    fontFamily: "roboto",
+                  )),
+
+              SizedBox(
+                height: 50,
               ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 87, right: 55, bottom: 63, left: 38),
-            width: 282,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.purple,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: MaterialButton(
-              child: Text(
-                'Register',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+              DropdownButtonFormField<String>(
+                value: _currentSelectedValue,
+                dropdownColor: Color.fromARGB(190, 15, 4, 89),
+                items: [
+                  'Admin',
+                  'APMCCollector',
+                  'Manufacturer',
+                  'Wholesaler',
+                  'Shipping',
+                  'Retailer',
+                  'Vendor'
+                ]
+                    .map((label) => DropdownMenuItem(
+                          child: Text(label,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              )),
+                          value: label,
+                        ))
+                    .toList(),
+                hint: Text('User Type'),
+                onChanged: (value) {
+                  setState(() {
+                    _currentSelectedValue = value ?? '';
+                  });
+                },
+                onSaved: (val) {
+                  print('onSaved drowndownformfield $val');
+                },
               ),
-              elevation: 4,
-              onPressed: () async {
-                //create user
-                var message = await addUser(emailController.text,
-                    passController.text, _currentSelectedValue);
-                // print(message[0]);
-                return showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                          title: Text("Message"),
-                          content: Text(message),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(ctx).pop();
-                              },
-                              child: Text("okay"),
-                            ),
-                          ],
-                        ));
-              }, //validateForm,
-            ),
+              SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                style: TextStyle(color: Colors.white),
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: "Email ID ",
+                  hintText: 'abc@apmc.com',
+                  focusColor: Colors.white,
+                  labelStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                  hintStyle:
+                      TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                style: TextStyle(color: Colors.white),
+                controller: passController,
+                decoration: InputDecoration(
+                  labelText: "Password ",
+                  hintText: 'secure passcode',
+                  labelStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                  hintStyle: TextStyle(color: Colors.white),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                ),
+              ),
+              Container(
+                margin:
+                    EdgeInsets.only(top: 87, right: 55, bottom: 63, left: 38),
+                width: 282,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: MaterialButton(
+                  child: Text(
+                    'REGISTER',
+                    style: TextStyle(
+                        fontSize: 20, color: Color.fromARGB(255, 15, 4, 89)),
+                  ),
+                  elevation: 4,
+                  onPressed: () async {
+                    //create user
+                    var message = await addUser(emailController.text,
+                        passController.text, _currentSelectedValue);
+                    // print(message[0]);
+                    return showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                              title: Text(
+                                "Success!",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 15, 4, 89)),
+                              ),
+                              content:
+                                  Text("New participant added to the Network"),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text("OKAY"),
+                                ),
+                              ],
+                            ));
+                  }, //validateForm,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
