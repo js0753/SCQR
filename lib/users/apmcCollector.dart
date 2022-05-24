@@ -201,15 +201,15 @@ class DataFormState extends State<DataForm> {
               elevation: 4,
               onPressed: () async {
                 //Get Location first
-                // Position _currentPosition = await _determinePosition();
+                Position _currentPosition = await _determinePosition();
                 print("Got location");
                 var dataString = idController.text +
                     prodController.text +
                     costController.text +
                     itnoController.text +
                     gradeController.text +
-                    // _currentPosition.latitude.toString() +
-                    // _currentPosition.longitude.toString() +
+                    _currentPosition.latitude.toString() +
+                    _currentPosition.longitude.toString() +
                     DateTime.now().toString();
 
                 // Append all fields together along with date and location _____
@@ -241,7 +241,9 @@ class DataFormState extends State<DataForm> {
                   costController.text,
                   itnoController.text,
                   prodController.text,
-                  gradeController.text
+                  gradeController.text,
+                  _currentPosition.latitude.toString(),
+                  _currentPosition.longitude.toString()
                 ]);
                 this.changeState();
               }, //validateForm,

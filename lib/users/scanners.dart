@@ -26,7 +26,7 @@ class _ScannersPageState extends State<ScannersPage> {
   String response = 'null';
   String myresponse = "null";
   _ScannersPageState(this.userType, this.userId);
-  // [orderId, farmerId, rawD, manuId, manuD, wholeId, wholeD, retailId, retailD, logId, shipD, status, name, grade, price]
+  // [orderId, farmerId, rawD, manuId, manuD, wholeId, wholeD, retailId, retailD, logId, shipD, status, name, grade, price,lat,long]
   var food = [
     "abcfh36vsjn",
     "hemant12",
@@ -42,7 +42,9 @@ class _ScannersPageState extends State<ScannersPage> {
     "Wholesaler",
     "Apples",
     "A grade",
-    "2340"
+    "2340",
+    "23N",
+    "78S"
   ];
   var orderId = "new";
   _refreshData(String res) {
@@ -50,7 +52,7 @@ class _ScannersPageState extends State<ScannersPage> {
       myresponse = response;
       var arr = myresponse.split(",");
       orderId = "changed";
-      if (arr.length == 18) {
+      if (arr.length == 20) {
         food = [
           arr[0].split(":")[1],
           arr[2].split(":")[1],
@@ -66,7 +68,9 @@ class _ScannersPageState extends State<ScannersPage> {
           arr[7].split(":")[1],
           arr[13].split(":")[1],
           arr[14].split(":")[1],
-          arr[15].split(":")[1]
+          arr[15].split(":")[1],
+          arr[18].split(":")[1],
+          arr[19].split(":")[1]
         ];
         print(food.length);
         print(food);
@@ -233,7 +237,14 @@ class _ScannersPageState extends State<ScannersPage> {
                                                   190, 15, 4, 89)),
                                         ),
                                         Text(
-                                          "Food Creation: ${food[2]}",
+                                          "Latitude: ${food[15]}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Color.fromARGB(
+                                                  190, 15, 4, 89)),
+                                        ),
+                                        Text(
+                                          "Longitude: ${food[16]}",
                                           style: TextStyle(
                                               fontSize: 20,
                                               color: Color.fromARGB(

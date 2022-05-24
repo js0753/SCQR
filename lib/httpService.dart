@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class HttpService {
   static Future<String> FunctionInvoke(String func, List args) async {
     var token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTM0NDg1NzYsInVzZXJuYW1lIjoic2NxciIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNjUzNDEyNTc2fQ.2oHoyysuES0lS7fMJKPbQwr0Wm1lHvTTwL6YPhmh__A";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTM0NTgxNTIsInVzZXJuYW1lIjoic2NxcjEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTY1MzQyMjE1Mn0.vnVwNvlyVsiWys7COFM7aLHJYwjA04AXqEhREBo7q8o";
+
     var ApiLink = "https://86f2da4f9087ff.lhrtunnel.link";
     String chaincode = '/channels/mychannel/chaincodes/fabcar';
     if (func == 'query') {
