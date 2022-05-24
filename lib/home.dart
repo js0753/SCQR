@@ -79,8 +79,8 @@ class LoginFormState extends State<LoginForm> {
                   'APMCCollector',
                   'Manufacturer',
                   'Wholesaler',
-                  'Retailer',
                   'Shipping',
+                  'Retailer',
                   'Vendor'
                 ]
                     .map((label) => DropdownMenuItem(

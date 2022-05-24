@@ -50,25 +50,27 @@ class _ScannersPageState extends State<ScannersPage> {
       myresponse = response;
       var arr = myresponse.split(",");
       orderId = "changed";
-      food = [
-        arr[0].split(":")[1],
-        arr[2].split(":")[1],
-        arr[8].split(":")[1],
-        arr[3].split(":")[1],
-        arr[9].split(":")[1],
-        arr[4].split(":")[1],
-        arr[10].split(":")[1],
-        arr[5].split(":")[1],
-        arr[12].split(":")[1],
-        arr[6].split(":")[1],
-        arr[11].split(":")[1],
-        arr[7].split(":")[1],
-        arr[13].split(":")[1],
-        arr[14].split(":")[1],
-        arr[15].split(":")[1]
-      ];
-      print(food.length);
-      print(food);
+      if (arr.length == 18) {
+        food = [
+          arr[0].split(":")[1],
+          arr[2].split(":")[1],
+          arr[8].split(":")[1],
+          arr[3].split(":")[1],
+          arr[9].split(":")[1],
+          arr[4].split(":")[1],
+          arr[10].split(":")[1],
+          arr[5].split(":")[1],
+          arr[12].split(":")[1],
+          arr[6].split(":")[1],
+          arr[11].split(":")[1],
+          arr[7].split(":")[1],
+          arr[13].split(":")[1],
+          arr[14].split(":")[1],
+          arr[15].split(":")[1]
+        ];
+        print(food.length);
+        print(food);
+      }
     });
   }
 
