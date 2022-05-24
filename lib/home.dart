@@ -221,8 +221,7 @@ class LoginFormState extends State<LoginForm> {
                     )),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        ScannersPage(_currentSelectedValue, "Guest"),
+                    builder: (context) => ScannersPage("Guest", "Guest"),
                   ));
                 },
               ),
